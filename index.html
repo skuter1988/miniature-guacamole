@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klikacz PRO</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        :root { --primary: #38bdf8; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; }
+        body { font-family: sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; flex-direction: column; height: 100vh; }
+        nav { background: #111827; display: flex; justify-content: space-around; padding: 15px; border-bottom: 1px solid #334155; }
+        nav button { background: none; border: none; color: #94a3b8; font-weight: bold; cursor: pointer; }
+        nav button.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
+        .content { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .page { display: none; text-align: center; width: 100%; max-width: 400px; }
+        .page.active { display: block; }
+        .card { background: var(--card); padding: 2rem; border-radius: 1.5rem; border: 2px solid #334155; }
+        .btn-main { background: var(--primary); color: var(--bg); padding: 1rem; border: none; border-radius: 1rem; font-size: 1.2rem; font-weight: bold; width: 100%; }
+        .counter { font-size: 4rem; margin: 1rem 0; }
+    </style>
+</head>
+<body>
+    <nav>
+        <button onclick="showPage('home')" id="btn-home" class="active">GRA</button>
+        <button onclick="showPage('stats')" id="btn-stats">PROFIL</button>
+    </nav>
+    <div class="content">
+        <div id="home" class="page active">
+            <div class="card">
+                <div class="counter" id="licz">0</div>
+                <button class="btn-main" onclick="klik()">KLIKNIJ!</button>
+            </div>
+        </div>
+        <div id="stats" class="page">
+            <div class="card">
+                <h2>Suma kliknięć: <span id="suma">0</span></h2>
+                <p>Status: <b id="ranga">Nowicjusz</b></p>
+            </div>
+        </div>
+    </div>
+    <script>
+        let p = localStorage.getItem('p') || 0;
+        const d = new Audio('https://www.soundjay.com/buttons/sounds/button-16.mp3');
+        const up = () => { 
+            document.getElementById('licz').innerText = p; 
+            document.getElementById('suma').innerText = p;
+            document.getElementById('ranga').innerText = p > 100 ? "Ekspert" : "Nowicjusz";
+        };
+        up();
+        function klik() { 
+            p++; localStorage.setItem('p', p); up(); d.play(); 
+            if(navigator.vibrate) navigator.vibrate(50); // Wibracja na Androidzie!
+        }
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(pg => pg.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.getElementById('btn-' + id).classList.add('active');
+        }
+    </script>
+</body>
+</html>
